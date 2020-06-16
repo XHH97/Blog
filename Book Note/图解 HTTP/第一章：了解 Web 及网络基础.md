@@ -102,6 +102,10 @@
 
 ## URI 和 URL
 
+* 与 URI 相比我们更加的熟悉 URL。URL 正是我们使用浏览器等客户端访问 Web 页面时需要输入的网页地址。
+
+* URI 用字符串标识某一互联网资源，而 URL 标识资源的地点（互联网）。可见 URL 是 URI 的子集。
+
 ## 扩展阅读
 * [SGML](https://zh.wikipedia.org/zh-hans/SGML)
 * [关于 TCP/IP 协议族](https://zh.wikipedia.org/wiki/TCP/IP%E5%8D%8F%E8%AE%AE%E6%97%8F)
