@@ -1,117 +1,122 @@
-# �����£�HTTP �����ڵ� HTTP ��Ϣ
+# 第三章：HTTP 报文内的 HTTP 信息
 
-## HTTP ����
+## HTTP 报文
 
-* ���� HTTP Э�齻������Ϣ��Ϊ HTTP ���ġ�����ˣ��ͻ��ˣ��� HTTP ���Ľ�`������`����Ӧ�ˣ��������ˣ��Ľ�`��Ӧ����`��HTTP ���ı������ɶ��У��� CR+LF �����з������ݹ��ɵ��ַ����ı���HTTP ���Ĵ��¿ɷ�Ϊ�����ײ��ͱ����������顣������������ֵĿ��У�CP+LF�������֡�
+* 用于 HTTP 协议交互的信息称为 HTTP 报文。请求端（客户端）的 HTTP 报文叫`请求报文`，响应端（服务器端）的叫`响应报文`。HTTP 报文本身是由多行（用 CR+LF 作换行符）数据构成的字符串文本。HTTP 报文大致可分为报文首部和报文主体两块。两者由最初出现的空行（CP+LF）来划分。
 
-## �����ļ���Ӧ���ĵĽṹ
+## 请求报文及响应报文的结构
 
-**�����Ľṹ**
+**请求报文结构**：
 
-* �����ײ�
-  * ������
-  * �����ײ��ֶ�
-  * ͨ���ײ��ֶ�
-  * ʵ���ײ��ֶ�
-  * ����
-* ����(CR+LF)
-* �������壨����ʵ�壩
+* 报文首部
+  * 请求行
+  * 请求首部字段
+  * 通用首部字段
+  * 实体首部字段
+  * 其他
+* 空行(CR+LF)
+* 报文主体（内容实体）
 
-**��Ӧ���Ľṹ**
+**响应报文结构**：
 
-* ��Ӧ�ײ�
-  * ״̬��
-  * ��Ӧ�ײ��ֶ�
-  * ͨ���ײ��ֶ�
-  * ʵ���ײ��ֶ�
-  * ����
-* ����(CR+LF)
-* �������壨����ʵ�壩
+* 响应首部
+  * 状态行
+  * 响应首部字段
+  * 通用首部字段
+  * 实体首部字段
+  * 其他
+* 空行(CR+LF)
+* 报文主体（内容实体）
 
-���ϵĽṹ����ʹ�����¼������ֽ��н��ܣ�
+以上的结构我们使用以下几个部分进行介绍：
 
-* ������    - ��������ķ��������� URI �� HTTP �汾
-* ״̬��    - ����������Ӧ�����״̬�룬ԭ������ HTTP �汾
-* �ײ��ֶ�  - ������ʾ�������Ӧ�ĸ������������Եĸ����ײ���һ����4���ײ����ֱ��ǣ�`�����ײ�`��`��Ӧ�ײ�`��`ͨ���ײ�`��`ʵ���ײ�`��
-* ����     - ���ܰ��� HTTP �� [RFC](#��չ�Ķ�) ��δ������ײ���Cookie �ȣ���
+* 请求行    - 包含请求的方法，请求 URI 和 HTTP 版本
+* 状态行    - 包含表明响应结果的状态码，原因短语和 HTTP 版本
+* 首部字段  - 包含表示请求和响应的各种条件和属性的各类首部。一般有4个首部，分别是：`请求首部`，`响应首部`，`通用首部`和`实体首部`。
+* 其他     - 可能包含 HTTP 的 [RFC](#扩展阅读) 李未定义的首部（Cookie 等）。
 
-## ����������������
+![请求报文（上）和响应报文（下）的结构](https://xhh-image-1258151134.cos.ap-nanjing.myqcloud.com/Markdown%20image/%E5%9B%BE%E8%A7%A3%20HTTP/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87%EF%BC%88%E4%B8%8A%EF%BC%89%E5%92%8C%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%EF%BC%88%E4%B8%8B%EF%BC%89%E7%9A%84%E7%BB%93%E6%9E%84.png)
 
-* HTTP �ڴ��������ǿ��԰�������ԭòֱ�Ӵ��䣬��Ҳ�����ڴ��������ͨ�����������������ʡ�ͨ���ڴ���ʱ���룬����Ч�ش��������ķ������󡣵��ǣ�**����Ĳ�����Ҫ���������ɣ���˻����ĸ���� CPU ����Դ**��
+## 编码提升传输速率
 
-### ���������ʵ������Ĳ���
+* HTTP 在传输数据是可以按照数据原貌直接传输，但也可以在传输过程中通过编码提升传输速率。通过在传输时编码，能有效地处理大量的访问请求。但是，**编码的操作需要计算机来完成，因此会消耗更多的 CPU 等资源**。
 
-* ���ģ�message��
-    �� HTTP ͨ���еĻ�����λ���� 8 λ���ֽ�����octet squence����ɣ�ͨ�� HTTP ͨ�Ŵ��䡣
-* ʵ�壨entity��
-    ��Ϊ�������Ӧ����Ч�غ����ݣ�����������䣬��������`ʵ���ײ�`��`ʵ������`��ɡ�
+### 报文主体和实体主体的差异
 
-* HTTP ���ĵ��������ڴ����������Ӧ��ʵ�����塣ͨ���������������ʵ�����塣ֻ�е������н��б������ʱ��ʵ������ı��ٷ����仯���ŵ������ͱ�������������졣
+* 报文（message）
+    是 HTTP 通信中的基本单位，由 8 位组字节流（octet sequence）组成，通过 HTTP 通信传输。
+* 实体（entity）
+    作为请求或响应的有效载荷数据（补充项）被传输，其内容有`实体首部`和`实体主体`组成。
 
-### ѹ����������ݱ���
+* HTTP 报文的主体用于传输请求或响应的实体主体。通常，报文主体等于实体主体。只有当传输中进行编码操作时，实体主体的北荣发生变化，才导致它和报文主体产生差异。
 
-* HTTP Э������һ�ֱ���Ϊ`���ݱ���`�Ĺ��ܣ��ù���ָ��Ӧ�������������ϵı����ʽ��������ʵ����Ϣԭ��ѹ�������ݱ�����ʵ���ɿͻ��˽��ղ�������롣
+### 压缩传输的内容编码
 
-���õ����ݱ��������¼���:
-  * gizp��GNU zip��
-  * compress��UNIX ϵͳ�ı�׼ѹ����
-  * deflate��zlib��
-  * identity�������б��룩
+* HTTP 协议中有一种被称为`内容编码`的功能，该功能指明应用在试题内容上的编码格式，并保持实体信息原样压缩。内容编码后的实体由客户端接收并负责解码。
 
-### �ָ�͵ķֿ鴫�����
+常用的内容编码有以下几种:
 
-* �� HTTP ͨ�Ź����У�����ı���ʵ����Դ��δȫ���������֮ǰ��������޷���ʾ����ҳ�档�ڴ������������ʱ��ͨ�������ݷָ�ɶ�飬�ܹ������������ʾҳ�档���ְ�ʵ��ֿ�Ĺ��ܳ�Ϊ`�ֿ鴫�����`��Chunked Transfer Coding����
+* gzip（GNU zip）
+* compress（UNIX 系统的标准压缩）
+* deflate（zlib）
+* identity（不进行编码）
 
-* �ֿ����Ὣʵ������ֳɶ�����֣��飩��ÿһ�鶼����ʮ����������ǿ�Ĵ�С����ʵ������һ���ʹ�á�0��CR+LF��������ǡ�
+![内容编码](https://xhh-image-1258151134.cos.ap-nanjing.myqcloud.com/Markdown%20image/%E5%9B%BE%E8%A7%A3%20HTTP/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E5%86%85%E5%AE%B9%E7%BC%96%E7%A0%81.png)
 
-* ʹ�÷ֿ�����ʵ��������ɽ��յĿͻ��˸�����룬�ָ�������ǰ��ʵ�����塣HTTP/1.1 �д���һ�ֳ�Ϊ`�������`��Transfer Coding���Ļ��ƣ���������ͨ���ǰ�ĳ�ֱ��뷽ʽ���䣬��ֻ���������ڷֿ鴫������С�
+### 分割发送的分块传输编码
 
-## ���Ͷ������ݵĶಿ�ֶ��󼯺�
+* 在 HTTP 通信过程中，请求的编码实体资源尚未全部传输完成之前，浏览器无法显示请求页面。在传输大容量数据时，通过把数据分割成多块，能够让浏览器逐步显示页面。这种把实体分块的功能称为`分块传输编码`（Chunked Transfer Coding）。
 
-* HTTP Э����Ҳ�����˶ಿ�ֶ��󼸸������͵�һ�ݱ�������ɰ����ж�����ʵ�塣ͨ������ͼƬ���ı��ļ����ϴ�ʱʹ�á�
+* 分块编码会将实体主体分成多个部分（块）。每一块都会用十六进制来标记块的大小，而实体的最后一块会使用“0（CR+LF）”来标记。
 
-  **�ಿ�ֶ��󼯺ϰ����Ķ�������**��
-    * multipart/form-data   - �� Web �����ļ��ϴ�ʱʹ��
-    * multipart/byteranges  - ״̬�� 206��Partial Content���������ݣ���Ӧ���İ����˶����Χ������ʱʹ��
+* 使用分块编码的实体主体会由接收的客户端负责解码，恢复到编码前的实体主体。HTTP/1.1 中存在一种称为`传输编码`（Transfer Coding）的机制，它可以在通信是按某种编码方式传输，但只定义作用于分块传输编码中。
 
-* HTTP ������ʹ�öಿ�ֶ��󼯺�ʱ����Ҫ���ײ��ֶ������ `Content-type`��ʹ�� `boundary` �ַ��������ֶಿ�ֶ��󼯺�ָ���ĸ���ʵ�塣�� `boundary` �ַ���ָ���ĸ���ʵ�����ʼ��֮ǰ���롰--����ǣ����磺--AaB03x��--THIS_STRING_SEPARATES�������ڶಿ�ֶ��󼯺϶�����ַ����������롰--����ǣ����磺--AaB03x--��--THIS_STRING_SEPARATES--����Ϊ������
+![分块传输编码](https://xhh-image-1258151134.cos.ap-nanjing.myqcloud.com/Markdown%20image/%E5%9B%BE%E8%A7%A3%20HTTP/%E7%AC%AC%E4%B8%89%E7%AB%A0/%E5%88%86%E5%9D%97%E4%BC%A0%E8%BE%93%E7%BC%96%E7%A0%81.png)
 
-* �ಿ�ֶ��󼯺ϵ�ÿ�����������У������Ժ����ײ��ֶΡ����⣬������ĳ��������Ƕ��ʹ�öಿ�ֶ��󼯺ϡ�[�����ϼ�����](#��չ�Ķ�)
+## 发送多种数据的多部分对象集合
 
-## ��ȡ�������ݵķ�Χ����
+* HTTP 协议中也采纳了多部分对象几个，发送的一份报文主体可包含有多类型实体。通常是在图片或文本文件等上传时使用。
 
-* ��Է�Χ������Ӧ�᷵��״̬�� 206 Partial Content ����Ӧ���ġ�������ڶ��ط�Χ�ķ�Χ������Ӧ�����ײ��ֶ� Cpntent-type �б��� multipart/byteranges �󷵻���Ӧ���ġ�������������޷���Ӧ��Χ������ط���״̬�� 200 OK ��������ʵ�����ݡ�
+  **多部分对象集合包含的对象如下**：
+  * multipart/form-data   - 在 Web 表单文件上传时使用
+  * multipart/byteranges  - 状态码 206（Partial Content，部分内容）响应报文包含了多个范围的内容时使用
 
-## ����Э�̷�������ʵ�����
+* HTTP 报文中使用多部分对象集合时，需要在首部字段里加上 `Content-type`；使用 `boundary` 字符串来划分多部分对象集合指明的各类实体。在 `boundary` 字符串指定的各个实体的起始行之前插入“--”标记（例如：--AaB03x、--THIS_STRING_SEPARATES），而在多部分对象集合对象的字符串的最后插入“--”标记（例如：--AaB03x--、--THIS_STRING_SEPARATES--）作为结束。
 
-* ���������Ĭ������ΪӢ�Ļ����ģ�������ͬ�� URI �� Web ҳ��ʱ�������ʾ��Ӧ��Ӣ�İ�����İ�� Web ҳ�档�����Ļ��Ƴ�Ϊ`����Э��`��Content Negotiation��
+* 多部分对象集合的每个部分类型中，都可以含有首部字段。另外，可以在某个部分中嵌套使用多部分对象集合。[多对象合集解释](#扩展阅读)
 
-* ����Э�̻�����ָ�ͻ��˺ͷ���˾���Ӧ����Դ���ݽ��н��棬Ȼ���ṩ���ͻ�����Ϊ���ʵ���Դ������Э�̻�����Ӧ��Դ�����ԡ��ַ��������뷽ʽ����Ϊ�жϵĻ�׼��
+## 获取部分内容的范围请求
 
-**�����ֶ��ǻ���Ϊ�������������е��жϻ�׼**��
+* 针对范围请求，响应会返回状态码 206 Partial Content 的响应报文。另外对于多重范围的范围请求，响应会在首部字段 Content-type 中标明 multipart/byteranges 后返回响应报文。如果服务器端无法响应范围请求，这回返回状态码 200 OK 和完整的实体内容。
+
+## 内容协商返回最合适的内容
+
+* 当浏览器的默认语言为英文或中文，访问相同的 URI 的 Web 页面时，则会显示对应的英文版或中文版的 Web 页面。这样的机制称为`内容协商`（Content Negotiation）
+
+* 内容协商机制是指客户端和服务端就响应的资源内容进行交涉，然后提供给客户端最为合适的资源。内容协商会以响应资源的语言、字符集、编码方式等作为判断的基准。
+
+**以下字段是会作为包含在请求报文中的判断基准**：
+
 * Accept
 * Accept-Charset
 * Accept-Encoding
 * Accept-Language
 * Content-Language
 
-**����Э�̵�3������**��
-* ����������Э�̣�Server-diven Negotiation��
-    �ɷ������˽�������Э�̡���������ײ��ֶ�Ϊ�ο����ڷ�������
-�Զ������������û���˵������������͵���Ϣ��Ϊ�ж������ݣ�
-����һ����ɸѡ���������ݡ�
-* �ͻ�������Э�̣�Agent-diven Negotiation��
-    �ɿͻ��˽�������Э�̵ķ�ʽ���û����������ʾ�Ŀ�ѡ���б���
-�ֶ�ѡ�񡣻��������� JavaScript �ű��� Web ҳ�����Զ���������
-ѡ�񡣱��簴 OS �����ͻ���������ͣ������л��� PC ��ҳ���
-�ֻ���ҳ�档
-* ͸��Э�̣�Transparent Negotiation��
-    �Ƿ����������Ϳͻ��������Ľ���壬���ɷ������˺Ϳͻ��˸���
-��������Э�̵�һ�ַ�����
+**内容协商的3种类型**：
 
-## ��չ�Ķ�
-[RFC - ���������](https://zh.wikipedia.org/wiki/RFC)
-[RFC2046 - ����󼯺�](https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95)
+* 服务器驱动协商（Server-driven Negotiation）
+    由服务器端进行内容协商。以请求的首部字段为参考，在服务器端自动处理。但对用户来说，以浏览器发送的信息作为判定的依据，并不一定能筛选出最优内容。
+* 客户端驱动协商（Agent-driven Negotiation）
+    由客户端进行内容协商的方式。用户从浏览器显示的可选项列表中手动选择。还可以利用 JavaScript 脚本在 Web 页面上自动进行上述选择。比如按 OS 的类型或浏览器类型，自行切换成 PC 版页面或手机版页面。
+* 透明协商（Transparent Negotiation）
+    是服务器驱动和客户端驱动的结合体，是由服务器端和客户端各自进行内容协商的一种方法。
+
+## 扩展阅读
+
+[RFC - 请求意见稿](https://zh.wikipedia.org/wiki/RFC)
+[RFC2046 - 多对象集合](https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95)
 
 ## TODO
-* [ ] Ū������ĺ�ʵ��
+
+* [ ] 弄清楚报文和实体

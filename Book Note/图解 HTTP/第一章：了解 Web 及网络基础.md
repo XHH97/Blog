@@ -138,6 +138,7 @@ b# 了解 Web 及网络基础
 * [关于 TCP/IP 协议族](https://zh.wikipedia.org/wiki/TCP/IP%E5%8D%8F%E8%AE%AE%E6%97%8F)
 * [RFC1945 - Hypertext Transfer Protocol -- HTTP/1.0](http://www.ietf.org/rfc/rfc1945.txt)
 * [RFC2616 - Hypertext Transfer Protocol -- HTTP/1.1](http://www.ietf.org/rfc/rfc2616.txt)
+* [路由](https://zh.wikipedia.org/wiki/%E8%B7%AF%E7%94%B1)
 
 ## TODO
 
