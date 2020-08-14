@@ -1,24 +1,8 @@
-// import.meta
-const data = import.meta;
-console.log(data);   // 一个对象 {url: ''}
+const { url } = import.meta;
+const params = new URL(url).searchParams;
 
-const promise1 = Promise.resolve(3);
-const promise2 = new Promise((resolve, reject) => setTimeout(reject, 100, 'foo'));
-const promises = [promise1, promise2];
+let keys = params.entries();
 
-Promise.allSettled(promises).
-  then((results) => results.forEach((result) => console.log(result.status)))
-  .catch((err)=> {
-    console.log(object);
-  });
-
-// 动态 import
-async function func() {
-  const { NUMBER } = await import('./module.js');
-  const value = await Promise.allSettled(promises);
-  console.log(value);
-  console.log(NUMBER); // 10
+for (const key of keys) {
+  console.log(key);
 }
-
-func();
-
